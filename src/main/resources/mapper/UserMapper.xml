@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:填写映射当前的Mapper接口，所有的增删改查的参数和返回值类型，
+		就可以直接填写缩写，不区分大小写，直接通过方法名去找类型-->
+<mapper namespace="com.lwh.ex.sbm.mapper.UserMapper">
+
+
+    <!-- 封装映射关系，数据库中的字段和实体类之间的映射关系-->
+    <resultMap id="userMap" type="com.lwh.ex.sbm.model.UserVO">
+        <!-- 指定主键列的封装规则：与下面<result>标签的区别是可以用于提升性能，所以这里用<id>标签来定义主键的映射关系
+             column：数据库中对应的字段名
+             property：对应JavaBean 的属性名
+        -->
+        <id column="id" property="id"></id>
+        <!-- 定义普通列封装规则-->
+        <result column="username" property="userName"></result>
+        <!-- 其他不指定的列会自动封装：我们只要写resultMap就把全部的映射规则都写上。 -->
+        <result column="password" property="password"></result>
+        <result column="nickname" property="nickName"></result>
+        <result column="email" property="email"></result>
+    </resultMap>
+
+
+    <!-- sql:里面可以写入一个共同的sql代码，用于提取重复的代码。
+        要使用该代码的时候就直接使用<include>标签
+        id:为提取的sql代码，取一个id，起标识作用
+         -->
+    <sql id="select">
+        select * from user
+    </sql>
+    <!--  public void addUser(User user);
+        insert:用于执行添加语句；update:执行更新语句
+        同样 delete:执行删除语句
+     -->
+    <insert id="saveUser" parameterType="com.lwh.ex.sbm.model.UserVO">
+        <!-- selectKey配置主键信息的标签
+            keyColumn:对应数据库表中的主键列
+            keyProperty:对应实体类中的属性
+            after:代表执行下面代码之前，先执行当前里面的代码
+         -->
+        <!--<selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>-->
+        insert into user
+        (username,password,nickname,email)
+        values(#{userName},#{password},#{nickName},#{email})
+    </insert>
+
+    <!-- 根据id删除 -->
+    <delete id="delUserById" parameterType="java.lang.Long">
+        delete from user where id = #{id}
+    </delete>
+
+    <!-- QueryVo:是一个实体包装类，通常用于封装实体类之外的一些属性-->
+    <select id="queryUsers" parameterType="com.lwh.ex.sbm.model.UserQO" resultMap="userMap">
+        <include refid="select"></include>
+        <where>
+            <!-- foreach:循环语句，通常多用于参数是集合时，需要对参数进行遍历出来，再进行赋值查询
+                collection:参数类型中的集合、数组的名字，例：下面的ids就是QueryVo这个类中的list集合的名字
+                item:为遍历该集合起一个变量名，遍历出来的每一个字，都赋值到这个item中
+                open:在sql语句前面添加的sql片段
+                close:在sql语句后面添加的sql片段
+                separator:指定遍历元素之前用什么分隔符
+             -->
+            <foreach collection="qo.ids" item="id" open="id in(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+</mapper>

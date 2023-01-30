@@ -1,0 +1,19 @@
+
+server:
+  port: 8081
+  servlet:
+    context-path: /sbm
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/vueblog2?useSSL=false&useUnicode=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package:
+  mapper-locations: classpath:mapper/*.xml

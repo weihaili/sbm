@@ -42,4 +42,11 @@ public class UserController {
         log.info("UserController saveUser vo:{}", JSONObject.toJSONString(vo));
         return service.saveUser(vo);
     }
+
+    @PostMapping("/batch-save")
+    @ApiOperation(value = "batchSaveUser", tags = "userController")
+    public int batchSaveUser(@RequestBody List<UserVO> vos) {
+        log.info("UserController batchSaveUser vos:{}", JSONObject.toJSONString(vos));
+        return service.batchSaveUser(vos);
+    }
 }

@@ -45,7 +45,14 @@
         </selectKey>-->
         insert into user
         (username,password,nickname,email)
-        values(#{userName},#{password},#{nickName},#{email})
+        values(#{vo.userName},#{vo.password},#{vo.nickName},#{vo.email})
+    </insert>
+
+    <insert id="batchSave" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into user(username, password, nickname,email,regTime) values 
+        <foreach collection="vos" item="vo" separator=",">
+            (#{vo.userName}, #{vo.password}, #{vo.nickName}, #{vo.email}, now())
+        </foreach>
     </insert>
 
     <!-- 根据id删除 -->

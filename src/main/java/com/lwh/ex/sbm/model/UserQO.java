@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Set;
-
 @Data
 @ApiModel
 public class UserQO implements Serializable {
